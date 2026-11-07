@@ -138,6 +138,18 @@ body.idle{cursor:none}
 .knob-sw:focus-visible .cap{box-shadow:0 0 0 1px var(--ink)}
 .knob-sw[aria-pressed="true"]{color:var(--ink)}
 .knob-sw[aria-pressed="true"] .cap i{transform:rotate(55deg)}
+.knob-sw{position:relative}
+.dial-sw{cursor:grab;touch-action:none;outline:none}
+
+.dial-sw:hover .cap,.dial-sw:focus-visible .cap,.dial-sw.engaged .cap{transform:scale(1.3);border-color:var(--ink-2)}
+.dial-sw.engaged{cursor:grabbing}
+.knob-sw .kv{position:absolute;bottom:calc(100% + 16px);left:50%;transform:translate(-50%,4px);font-family:var(--f-mono);font-size:10px;letter-spacing:.14em;
+  white-space:nowrap;color:var(--ink);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;font-variant-numeric:tabular-nums}
+.knob-sw.engaged .kv{opacity:1;transform:translate(-50%,0)}
+.mode-sw{color:var(--ink)}
+.mode-sw .cap i{transform:rotate(var(--a,0deg));transition:transform .45s var(--ease)}
+.mode-sw .cap .pos{position:absolute;left:-8px;top:-8px;width:44px;height:44px;overflow:visible;pointer-events:none}
+.mode-sw .cap .pos circle{fill:var(--ink-2)}
 .knob-sw[aria-pressed="true"] .cap b{background:var(--ink);box-shadow:0 0 6px var(--ink-2)}
 /* volume dial: detented knob that swells when touched */
 .dial-wrap{position:relative;width:38px;height:38px;display:grid;place-items:center;margin-top:-4px}
@@ -176,6 +188,8 @@ body.pre .caption,body.idle .caption{opacity:0}
 
 /* explore panel */
 .panel{position:absolute;top:calc(env(safe-area-inset-top,0px) + 64px);right:var(--gxr);width:min(310px, calc(100vw - 32px));
+  max-height:calc(100vh - 64px - 132px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 64px - 132px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;
   background:var(--panel);-webkit-backdrop-filter:blur(22px) saturate(1.3);backdrop-filter:blur(22px) saturate(1.3);
   border:1px solid var(--hair);border-radius:16px;padding:20px;display:grid;gap:18px;font-size:13px}
 .panel h2{margin:0;font-family:var(--f-display);font-weight:700;font-size:15px;letter-spacing:-.01em}
@@ -233,6 +247,7 @@ body.pre .caption,body.idle .caption{opacity:0}
   .drop{width:17px}.drop i{width:10px;height:10px}
   .shuffle{width:58px;height:58px}
   .wordmark{font-size:19px}
+  .panel{max-height:calc(100vh - 64px - 250px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));max-height:calc(100dvh - 64px - 250px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));padding:16px;gap:14px}
   .caption{font-size:9px}
   .toast{bottom:calc(env(safe-area-inset-bottom,0px) + 214px)}
 }
@@ -270,7 +285,7 @@ body.pre .caption,body.idle .caption{opacity:0}
       <div class="switches" role="group" aria-label="Sound options">
         <button class="knob-sw" id="beatKnob" aria-pressed="true" title="Soft beat (B)"><span class="cap"><i></i><b></b></span><span class="lbl">Beat</span></button>
         <button class="knob-sw" id="melKnob" aria-pressed="true" title="Melody"><span class="cap"><i></i><b></b></span><span class="lbl">Melody</span></button>
-        <button class="knob-sw" id="mute" aria-pressed="false" title="Mute (M)"><span class="cap"><i></i><b></b></span><span class="lbl">Mute</span></button>
+        <div class="knob-sw mode-sw dial-sw" id="modeKnob" role="slider" tabindex="0" aria-label="Sound style" aria-valuemin="0" aria-valuemax="2" aria-valuenow="1" aria-valuetext="Wave" title="Sound style (V)"><span class="cap"><svg class="pos" viewBox="0 0 44 44" aria-hidden="true"><circle cx="10" cy="10" r="1.3"/><circle cx="22" cy="5" r="1.3"/><circle cx="34" cy="10" r="1.3"/></svg><i></i></span><span class="lbl" id="modeLbl">Wave</span></div>
       </div>
       <div class="dial-wrap" id="dialWrap">
         <span class="dial-val" id="dialVal">VOL 06</span>
@@ -285,7 +300,7 @@ body.pre .caption,body.idle .caption{opacity:0}
   <aside class="panel live" id="panel" hidden aria-label="Explore">
     <div>
       <h2>A little world of colour and sound</h2>
-      <p>Each composition sets the key, mood, tempo and timbre of the sound from its hues, light and chroma. Turn the dial by circling it, dragging up and down, or scrolling.</p>
+      <p>Each composition sets the key, mood and timbre of the sound from its hues, light and chroma. The style dial switches between Hum, Wave and City.</p>
     </div>
     <div class="sec">
       <span class="sec-t">Sound</span>
@@ -310,7 +325,7 @@ body.pre .caption,body.idle .caption{opacity:0}
     </div>
     <div class="sec">
       <span class="sec-t">Keys</span>
-      <div class="keys"><kbd>Space</kbd><span>Randomise</span><kbd>0 – 6</kbd><span>Choose a tone</span><kbd>S</kbd><span>Play or pause sound</span><kbd>B</kbd><span>Beat on or off</span><kbd>M</kbd><span>Mute</span><kbd>↑ ↓</kbd><span>Turn the volume dial (when focused)</span></div>
+      <div class="keys"><kbd>Space</kbd><span>Randomise</span><kbd>0 – 6</kbd><span>Choose a tone</span><kbd>S</kbd><span>Play or pause sound</span><kbd>V</kbd><span>Next sound style</span><kbd>B</kbd><span>Beat on or off</span><kbd>M</kbd><span>Mute</span><kbd>↑ ↓</kbd><span>Turn the volume dial (when focused)</span></div>
     </div>
   </aside>
 </div>
@@ -505,12 +520,28 @@ function deriveAudio(c) {
     keyLabel: `${NOTE_NAMES[minor ? (pc + 9) % 12 : pc]} ${minor ? 'minor' : 'major'}`,
     brightness, chromaN, energy, dark: c.dark,
     swing: rand(.08, .2),
-    cutoff: (520 + 2200 * brightness ** 1.4 + 500 * chromaN) * (minor ? .8 : 1),
+    cutoff: (650 + 1900 * brightness ** 1.3 + 600 * chromaN) * (minor ? .78 : 1),
     q: .5 + 1.2 * chromaN,
     saw: .02 + .1 * chromaN * (.4 + brightness * .6),
     tri: .5,
     oct: .04 + .09 * brightness,
     space: rand(.6, .8) + (c.style === 'fields' ? .1 : 0),
+    sawLevel: .22 + .16 * chromaN,
+    subLevel: minor ? .12 : .07,
+    wow: c.tone === 'pastel' || c.tone === 'muted' ? rand(5, 9) : rand(2, 5),
+    padMode: c.style === 'fields' ? pick(['swell', 'swell', 'offbeat']) : energy > .55 ? pick(['stab', 'offbeat', 'swell']) : pick(['swell', 'offbeat', 'stab', 'swell']),
+    stabs: pick([[1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0], [1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0], [1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0], [0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0]]),
+    pumpDepth: rand(.28, .45),
+    arpPattern: pick([[0, 1, 2, 3], [0, 1, 2, 3, 2, 1], [0, 2, 1, 3], [0, 1, 2, 4, 2, 1], [0, 2, 3, 4]]),
+    arpRate: energy > .5 ? 16 : 8,
+    bassStyle: energy > .5 && mood !== 'float' ? 'pulse' : 'soft',
+    form: pick([['A', 'B', 'A', 'C'], ['A', 'A', 'B', 'C'], ['A', 'B', 'C', 'B'], ['C', 'A', 'B', 'A']]),
+    cityFeel: mood === 'dusky' ? 'slow' : mood === 'bright' ? 'groove' : 'smooth',
+    bpmCity: Math.round(mood === 'dusky' ? rand(70, 78) : mood === 'bright' ? 100 + energy * 6 + rand(-1, 2) : rand(87, 95)),
+    bpmHouse: Math.round(118 + energy * 5 + rand(-1, 2)),
+    cityProg: (() => { const pool = shuffleArr(CITY_PROGS[minor ? 'dark' : 'light']); return pool[0].concat(pool[1] || pool[0]); })(),   // an 8-chord cycle
+    houseProg: pick(HOUSE_PROGS[minor ? 'dark' : 'light']),
+    houseStabs: pick(HOUSE_STABS),
     drone: .028,
     air: .003 + .012 * brightness,
     inst: c.warmth > .25 ? 'keys' : c.tone === 'chroma' ? 'pluck' : pick(['glass', 'keys', 'pluck']),
@@ -530,16 +561,16 @@ function chordShape(deg) {
 
 /* ================= Ambient sound engine (Web Audio) =================
    One clock (16th-note steps) drives chords, melody and beat, so everything lands together. */
-class Ambient {
+class AmbientHum {
   constructor() {
     this.ctx = null; this.state = 'off'; this.vol = .6; this.muted = false;
     this.beatOn = true; this.melodyOn = true; this.comp = null; this.a = null; this.pending = null;
     this.onNote = null; this.onKick = null;
   }
-  init() {
+  init(shared) {
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return false;
-    const c = this.ctx = new AC();
+    const c = this.ctx = shared || new AC();
     const g = v => { const n = c.createGain(); n.gain.value = v; return n; };
     const flt = (type, f, q = .7) => { const n = c.createBiquadFilter(); n.type = type; n.frequency.value = f; n.Q.value = q; return n; };
     const panner = p => { if (c.createStereoPanner) { const n = c.createStereoPanner(); n.pan.value = p; return n; } return g(1); };
@@ -761,7 +792,7 @@ class Ambient {
     const mod = c.createOscillator(); mod.frequency.value = f * ratio;
     const mg = c.createGain(); mg.gain.setValueAtTime(index * f, t); mg.gain.exponentialRampToValueAtTime(index * f * .06 + .01, t + mdec);
     mod.connect(mg); mg.connect(car.frequency);
-    const env = c.createGain(), pk = .085 * vel * this.a.level;
+    const env = c.createGain(), pk = .085 * vel * this.a.level * (this.melLevel ?? 1);
     env.gain.setValueAtTime(.0001, t); env.gain.linearRampToValueAtTime(pk, t + .006); env.gain.exponentialRampToValueAtTime(.0001, t + dec);
     const pn = this.panner(rand(-.45, .45));
     car.connect(env); env.connect(pn); pn.connect(this.melBus);
@@ -868,6 +899,617 @@ class Ambient {
   setMuted(m) { this.muted = m; if (this.ctx && this.state === 'playing') this.master.gain.setTargetAtTime(this.level(), this.ctx.currentTime, .3); }
 }
 
+
+
+/* ---- styles for the synth engine. Hum is the original engine (AmbientHum). ---- */
+const STYLE = {
+  wave:  { label: 'Wave',  chordBars: 2, pump: true,  arp: true,  lead: false, comp: false, bass: 'auto',   drums: 'wave',  stabFilter: true,  padLevel: .19, bassLevel: .2,  bassCut: 420, bassQ: 1.6 },
+  city:  { label: 'City',  chordBars: 1, pump: false, arp: false, lead: false, comp: true,  bass: 'funk',   drums: 'city',  stabFilter: true,  padLevel: .08, bassLevel: .42, bassCut: 950, bassQ: 1.2 },
+  house: { label: 'House', chordBars: 1, pump: true,  arp: false, lead: true,  comp: false, bass: 'octave', drums: 'house', stabFilter: false, padLevel: .2,  bassLevel: .3,  bassCut: 650, bassQ: 4 }
+};
+const MODES_UI = [['hum', 'Hum'], ['wave', 'Wave'], ['city', 'City']];
+// chords as [semitones above the key, intervals]: all consonant, with 7ths and 9ths for colour
+const CITY_PROGS = {
+  light: [
+    [[5, [0, 4, 7, 11, 14]], [4, [0, 4, 7, 10]], [9, [0, 3, 7, 10, 14]], [7, [0, 3, 7, 10]]],      // the "Just the Two of Us" turn
+    [[2, [0, 3, 7, 10, 14]], [7, [0, 5, 7, 10, 14]], [0, [0, 4, 7, 11, 14]], [9, [0, 3, 7, 10, 14]]], // ii9 V9sus Imaj9 vi9
+    [[5, [0, 4, 7, 11, 14]], [4, [0, 3, 7, 10]], [2, [0, 3, 7, 10, 14]], [0, [0, 4, 7, 11]]]          // IVmaj9 iii7 ii9 Imaj7
+  ],
+  dark: [
+    [[9, [0, 3, 7, 10, 14]], [2, [0, 3, 7, 10, 14]], [7, [0, 5, 7, 10, 14]], [0, [0, 4, 7, 11]]],     // vi9 ii9 V9sus Imaj7
+    [[9, [0, 3, 7, 10]], [5, [0, 4, 7, 11, 14]], [4, [0, 3, 7, 10]], [2, [0, 3, 7, 10, 14]]]
+  ]
+};
+const HOUSE_PROGS = {
+  light: [
+    [[0, [0, 4, 7, 11]], [4, [0, 3, 7, 10]]],                                  // Imaj7 iii7
+    [[5, [0, 4, 7]], [7, [0, 4, 7]], [9, [0, 3, 7]], [9, [0, 3, 7, 10]]],      // IV V vi vi7
+    [[2, [0, 3, 7, 10, 14]], [7, [0, 4, 7, 14]]]                               // ii9 Vadd9
+  ],
+  dark: [
+    [[9, [0, 3, 7, 10]], [5, [0, 4, 7, 11]]],                                  // vi7 IVmaj7
+    [[9, [0, 3, 7, 10]], [7, [0, 4, 7]], [5, [0, 4, 7, 11]], [5, [0, 4, 7, 11]]]
+  ]
+};
+const HOUSE_STABS = [
+  [1,0,0,1,0,0,1,0,0,0,1,0,0,1,0,0], [0,0,1,0,0,1,0,0,1,0,0,1,0,0,1,0], [1,0,0,1,0,0,0,1,0,0,1,0,0,0,1,0]
+];
+const CITY_COMP = {
+  groove: [[0,3,6,10,14], [2,6,10,14], [0,6,8,14], [3,6,11,14]],
+  smooth: [[0,6,10], [2,8,14], [0,10], [3,10,14]],
+  slow:   [[0], [0,10], [0,6]]
+};
+const CITY_BASS = {   // [step, semitones above root, velocity, length in steps]
+  smooth: [
+    [[0,0,1,3],[6,0,.6,2],[8,7,.75,3],[11,12,.5,2],[14,0,.6,2]],
+    [[0,0,1,5],[7,7,.65,2],[10,12,.55,3],[14,10,.5,2]],
+    [[0,0,1,3],[4,7,.6,3],[8,0,.8,4],[13,12,.5,3]]
+  ],
+  slow: [
+    [[0,0,1,12],[12,7,.55,4]],
+    [[0,0,1,6],[6,7,.5,4],[10,12,.45,6]],
+    [[0,0,1,10],[10,7,.5,6]]
+  ]
+};
+const FUNK_BASS = [   // [step, semitones above root, velocity]
+  [[0,0,1],[3,12,.6],[6,0,.8],[8,7,.75],[10,12,.6],[11,10,.5],[14,0,.75]],
+  [[0,0,1],[2,0,.5],[4,12,.7],[7,7,.7],[8,0,.9],[10,10,.6],[12,12,.7],[14,7,.6]],
+  [[0,0,1],[3,0,.6],[5,12,.65],[8,0,.9],[11,7,.7],[13,12,.55],[15,10,.5]]
+];
+
+class AmbientSynth {
+  constructor() {
+    this.ctx = null; this.state = 'off'; this.vol = .6; this.muted = false; this.style = 'wave';
+    this.beatOn = true; this.melodyOn = true; this.comp = null; this.a = null; this.pending = null;
+    this.onNote = null; this.onKick = null;
+  }
+  init(shared) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC && !shared) return false;
+    const c = this.ctx = shared || new AC();
+    const g = v => { const n = c.createGain(); n.gain.value = v; return n; };
+    const flt = (type, f, q = .7) => { const n = c.createBiquadFilter(); n.type = type; n.frequency.value = f; n.Q.value = q; return n; };
+    const panner = p => { if (c.createStereoPanner) { const n = c.createStereoPanner(); n.pan.value = p; return n; } return g(1); };
+    const lfo = (rate, depth, target) => { const o = c.createOscillator(); o.frequency.value = rate; const d = g(depth); o.connect(d); d.connect(target); o.start(); return d; };
+    this.g = g; this.flt = flt; this.panner = panner;
+
+    // master: gentle tape-style saturation → low cut → glue compressor
+    this.master = g(0);
+    const sat = c.createWaveShaper(); const curve = new Float32Array(2048), k = 1.8;
+    for (let i = 0; i < curve.length; i++) { const x = i / (curve.length - 1) * 2 - 1; curve[i] = Math.tanh(k * x) / Math.tanh(k); }
+    sat.curve = curve; sat.oversample = '2x';
+    const hp = flt('highpass', 38);
+    const comp = c.createDynamicsCompressor(); comp.threshold.value = -16; comp.knee.value = 18; comp.ratio.value = 2.6; comp.attack.value = .015; comp.release.value = .3;
+    const trim = g(.8);
+    this.master.connect(trim); trim.connect(sat); sat.connect(hp); hp.connect(comp); comp.connect(c.destination);
+    this.tickOut = g(.9); this.tickOut.connect(c.destination);
+
+    this.reverb = c.createConvolver(); this.reverb.buffer = this.impulse(4.2, 2.4);
+    this.wet = g(.6); this.reverb.connect(this.wet); this.wet.connect(this.master);
+
+    const nb = c.createBuffer(1, c.sampleRate * 3, c.sampleRate), nd = nb.getChannelData(0);
+    for (let i = 0; i < nd.length; i++) nd[i] = Math.random() * 2 - 1;
+    this.noiseBuf = nb;
+
+    // chords: Juno-style poly synth with chorus and a sidechain-style pump
+    this.padBus = g(.19);
+    this.padFilter = flt('lowpass', 900, 1.2);
+    this.padPump = g(1);
+    this.padBus.connect(this.padFilter); this.padFilter.connect(this.padPump);
+    const padDry = g(.55); this.padPump.connect(padDry); padDry.connect(this.master);
+    const padSend = g(.45); this.padPump.connect(padSend); padSend.connect(this.reverb);
+    [[.0035, .51, .0016, -.9], [.0047, .83, .0019, .9]].forEach(([d, rate, depth, p]) => {
+      const dl = c.createDelay(.05); dl.delayTime.value = d; lfo(rate, depth, dl.delayTime);
+      const pn = panner(p), cg = g(.55);
+      this.padPump.connect(dl); dl.connect(pn); pn.connect(cg); cg.connect(this.master); cg.connect(padSend);
+    });
+    this.flfoG = lfo(.07, 120, this.padFilter.frequency);
+    this.wow = g(5); const wowO = c.createOscillator(); wowO.frequency.value = .31; wowO.connect(this.wow); wowO.start();
+    this.voices = [-.5, -.15, .15, .5].map(p => {
+      const s1 = c.createOscillator(); s1.type = 'sawtooth'; s1.detune.value = -7;
+      const s2 = c.createOscillator(); s2.type = 'sawtooth'; s2.detune.value = 7;
+      const sub = c.createOscillator(); sub.type = 'square';
+      [s1, s2].forEach(o => this.wow.connect(o.detune));
+      const gS = g(.35), gSub = g(.08), env = g(0), pn = panner(p);
+      s1.connect(gS); s2.connect(gS); sub.connect(gSub); gS.connect(env); gSub.connect(env); env.connect(pn); pn.connect(this.padBus);
+      [s1, s2, sub].forEach(o => o.start());
+      return { s1, s2, sub, gS, gSub, env, midi: null };
+    });
+
+    // melody bus: tone filter, dotted echo, reverb
+    this.melBus = g(1);
+    const melLP = flt('lowpass', 5200); this.melBus.connect(melLP); this.melLP = melLP;
+    const melDry = g(.55); melLP.connect(melDry); melDry.connect(this.master);
+    this.echo = c.createDelay(2); this.echo.delayTime.value = .45;
+    const fb = g(.32), fbl = flt('lowpass', 2600);
+    melLP.connect(this.echo); this.echo.connect(fbl); fbl.connect(fb); fb.connect(this.echo);
+    const echoOut = g(.28); this.echo.connect(echoOut); echoOut.connect(this.master); this.echo.connect(this.reverb);
+    const melSend = g(.45); melLP.connect(melSend); melSend.connect(this.reverb);
+
+    // arpeggio (Wave)
+    this.arpBus = g(0);
+    this.arpLP = flt('lowpass', 2200, 3);
+    this.arpBus.connect(this.arpLP); this.arpLP.connect(melLP);
+    lfo(.05, 900, this.arpLP.frequency);
+
+    // talking lead (House): one gliding mono synth through a moving vowel-like band-pass
+    this.leadA = c.createOscillator(); this.leadA.type = 'sawtooth';
+    this.leadB = c.createOscillator(); this.leadB.type = 'square'; this.leadB.detune.value = 9;
+    this.leadEnv = g(0);
+    this.leadBP = flt('bandpass', 900, 2.2);
+    const leadLP = flt('lowpass', 3200, .7), leadMix = g(.5);
+    this.leadA.connect(leadMix); this.leadB.connect(leadMix); leadMix.connect(this.leadEnv);
+    this.leadEnv.connect(this.leadBP); this.leadBP.connect(leadLP); leadLP.connect(melLP);
+    this.leadA.start(); this.leadB.start();
+
+    // beat and bass
+    this.drumBus = g(0);
+    this.drumLP = flt('lowpass', 8000);
+    this.drumBus.connect(this.drumLP); this.drumLP.connect(this.master);
+    const drumSend = g(.14); this.drumLP.connect(drumSend); drumSend.connect(this.reverb);
+    this.bassBus = g(0);
+    this.bassLP = flt('lowpass', 420, 1.6); this.bassBus.connect(this.bassLP); this.bassLP.connect(this.master);
+    return true;
+  }
+  impulse(sec, decay) {
+    const c = this.ctx, sr = c.sampleRate, len = sr * sec | 0, b = c.createBuffer(2, len, sr);
+    for (let ch = 0; ch < 2; ch++) {
+      const d = b.getChannelData(ch);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, decay) * Math.min(1, i / (sr * .02));
+    }
+    return b;
+  }
+  get cfg() { return STYLE[this.style]; }
+
+  /* --- composition and style changes --- */
+  apply(comp, instant = false) {
+    this.comp = comp;
+    if (!this.ctx) return;
+    const a = comp.audio, now = this.ctx.currentTime, tc = instant ? .05 : 2;
+    this.padFilter.Q.setTargetAtTime(this.style === 'house' ? 4.5 : a.q, now, tc);
+    this.voices.forEach(v => { v.gS.gain.setTargetAtTime(a.sawLevel, now, tc); v.gSub.gain.setTargetAtTime(a.subLevel, now, tc); });
+    this.wet.gain.setTargetAtTime(this.style === 'house' ? a.space * .6 : a.space, now, tc * 1.4);
+    this.wow.gain.setTargetAtTime(this.style === 'house' ? 1 : a.wow, now, tc);
+    this.drumLP.frequency.setTargetAtTime(this.style === 'wave' ? a.drumTone : 11000, now, tc);
+    this.pending = a;
+  }
+  setStyle(style) {
+    if (style === this.style) return;
+    this.style = style;
+    if (this.comp) this.apply(this.comp);      // re-adopted on the next beat, so the chords carry over
+  }
+  adopt(a, t, instant) {
+    const cf = this.cfg, now = t;
+    this.a = a; this.pending = null;
+    this.bpm = this.style === 'city' ? a.bpmCity : this.style === 'house' ? a.bpmHouse : a.bpm;
+    this.swing = this.style === 'house' ? 0 : this.style === 'city' ? a.swing * .6 : a.swing;
+    this.chords = this.style === 'city' ? a.cityProg : this.style === 'house' ? a.houseProg : null;
+    this.feel = this.style === 'city' ? a.cityFeel : null;
+    this.chordBars = this.feel === 'slow' ? 2 : cf.chordBars;
+    if (this.feel === 'slow') this.swing = a.swing * 1.1;
+    this.chordIdx = 0; this.barInChord = 0; this.phraseBar = 0; this.bars = 0;
+    this.sectionIdx = 0; this.section = a.form[0];
+    this.padBus.gain.setTargetAtTime(cf.padLevel * (this.feel === 'slow' ? 1.7 : this.feel === 'smooth' ? 1.3 : 1), now, instant ? .05 : .8);
+    this.bassLP.frequency.setTargetAtTime(cf.bassCut, now, .3); this.bassLP.Q.setTargetAtTime(cf.bassQ, now, .3);
+    if (this.beatOn) this.bassBus.gain.setTargetAtTime(cf.bassLevel, now, .6);
+    this.echo.delayTime.setTargetAtTime(60 / this.bpm * .75, now, .5);
+    this.rotateCity();
+    this.newGroove(); this.newMotif();
+    this.enterSection(t, instant);
+    this.setChord(t, instant);
+  }
+  rotateCity() {
+    const f = this.feel || 'groove';
+    this.compSteps = pick(CITY_COMP[f]);
+    this.funk = f === 'groove' ? pick(FUNK_BASS) : pick(CITY_BASS[f]);
+  }
+  enterSection(t, instant = false) {
+    const a = this.a, sec = this.section, st = this.style, barDur = 240 / this.bpm;
+    if (st === 'house') {
+      // the filter sweep is the instrument: rises through A, opens in B, drops for the breakdown
+      const f = this.padFilter.frequency, base = a.cutoff * 1.1;
+      f.cancelScheduledValues(t);
+      if (sec === 'A') { f.setTargetAtTime(base * .3, t, .4); f.setTargetAtTime(base * 1.5, t + .5, barDur * 2.6); }
+      else if (sec === 'B') f.setTargetAtTime(base * 1.7, t, 1.2);
+      else f.setTargetAtTime(base * .28, t, 1.5);
+      this.cut = base;
+      this.flfoG.gain.setTargetAtTime(base * .18, t, 2);
+      this.mode = 'stab';
+    } else {
+      this.cut = a.cutoff * (st === 'city' ? (this.feel === 'slow' ? .62 : .85) : 1) * (sec === 'B' ? (st === 'city' ? 1.15 : 1.35) : sec === 'C' ? .6 : 1);
+      this.padFilter.frequency.cancelScheduledValues(t);
+      this.padFilter.frequency.setTargetAtTime(this.cut, t, instant ? .05 : 3.5);
+      this.flfoG.gain.setTargetAtTime(this.cut * .25, t, 2);
+      this.mode = st === 'city' || sec === 'C' ? 'swell' : a.padMode;
+    }
+    this.arpBus.gain.setTargetAtTime(this.cfg.arp && sec === 'B' && this.melodyOn ? .045 * a.level : 0, t, 1.2);
+    if (this.mode === 'swell') this.voices.forEach(v => v.env.gain.setTargetAtTime(.5, t, instant ? .05 : .8));
+    if (!(this.cfg.lead && sec === 'B')) this.leadEnv.gain.setTargetAtTime(0, t, .1);
+  }
+  chordFor(idx) {
+    const a = this.a;
+    if (this.chords) { const [r, ints] = this.chords[idx % this.chords.length]; return ints.map(i => a.base + r + i); }
+    const deg = a.prog[idx % a.prog.length];
+    return chordShape(deg).map(s => degNote(a.base, deg + s));
+  }
+  setChord(t, instant = false) {
+    const a = this.a, tones = this.chordFor(this.chordIdx);
+    const pcs = new Set(tones.map(pcOf)), rootPc = pcOf(tones[0]);
+    this.chordPcs = pcs; this.chordRoot = rootPc; this.chordTones = tones.slice(0, 4);
+    const b = a.base;
+    const ranges = [[b + 5, b + 16], [b + 9, b + 20], [b + 14, b + 25], [b + 17, b + 29]];
+    const used = new Set();
+    this.voices.forEach((v, i) => {
+      const [lo, hi] = ranges[i], prev = v.midi ?? (lo + hi) / 2;
+      let best = lo, bs = 1e9;
+      for (let m = lo; m <= hi; m++) {
+        const p = pcOf(m);
+        if (i === 0 ? p !== rootPc : !pcs.has(p)) continue;
+        const sc = Math.abs(m - prev) + (used.has(p) ? 4 : 0);
+        if (sc < bs) { bs = sc; best = m; }
+      }
+      used.add(pcOf(best)); v.midi = best;
+      const f = hz(best), tc = instant ? .01 : .05;
+      v.s1.frequency.setTargetAtTime(f, t, tc); v.s2.frequency.setTargetAtTime(f, t, tc); v.sub.frequency.setTargetAtTime(f / 2, t, tc);
+    });
+  }
+  newGroove() {
+    const e = this.a.energy, dusk = this.a.mood === 'dusky', calm = this.a.mood === 'float', st = this.style;
+    const z = () => Array(16).fill(0);
+    const K = z(), H = z(), B = z(), S = z(), O = z(), C = z();
+    if (st === 'house') {
+      [0, 4, 8, 12].forEach(i => K[i] = 1);
+      [2, 6, 10, 14].forEach(i => O[i] = .75);
+      C[4] = C[12] = .85;
+      for (let i = 1; i < 16; i += 2) H[i] = .22;
+      if (e > .4) for (let i = 0; i < 16; i++) S[i] = i % 2 ? .3 : .18;
+    } else if (st === 'city' && this.feel === 'slow') {        // half-time: kick on 1, clap on 3
+      K[0] = 1; if (Math.random() < .5) K[10] = .45;
+      C[8] = .55;
+      for (let i = 0; i < 16; i += 2) H[i] = i % 4 === 0 ? .3 : .2;
+      if (Math.random() < .5) B[14] = .18;
+    } else if (st === 'city' && this.feel === 'smooth') {
+      K[0] = 1; K[8] = .8; if (Math.random() < .4) K[11] = .4;
+      C[4] = C[12] = .5;
+      for (let i = 0; i < 16; i += 2) H[i] = i % 4 === 0 ? .35 : .4;
+      if (Math.random() < .5) { O[14] = .4; H[14] = 0; }
+    } else if (st === 'city') {
+      K[0] = 1; K[8] = .85;
+      if (Math.random() < .6) K[10] = .5;
+      if (Math.random() < .3) K[3] = .4;
+      C[4] = C[12] = .7;
+      if (Math.random() < .6) B[pick([7, 15])] = .3;
+      for (let i = 0; i < 16; i++) H[i] = i % 2 ? .22 : .45;
+      if (Math.random() < .7) { O[14] = .55; H[14] = 0; }
+    } else {
+      K[0] = 1;
+      if (Math.random() < .55) K[pick([6, 7, 10])] = .65;
+      if (!dusk && !calm && Math.random() < .45 + e * .3) K[8] = .8;
+      if (Math.random() < .3) K[pick([11, 14])] = .5;
+      if (!calm) { B[12] = .8; if (!dusk || Math.random() < .5) B[4] = .7; } else B[12] = .55;
+      for (let i = 0; i < 16; i += 2) H[i] = i % 4 === 0 ? .5 : .8;
+      if (e > .45) for (let i = 1; i < 16; i += 2) if (Math.random() < e * .45) H[i] = .32;
+      if (e > .6) for (let i = 0; i < 16; i++) S[i] = Math.random() < .45 ? .4 : 0;
+    }
+    this.groove = { K, H, B, S, O, C };
+  }
+  newMotif() {
+    const a = this.a, slots = [0, 2, 3, 4, 6, 8, 10, 11, 12, 14];
+    const dens = this.style === 'house' ? a.melDensity + .15 : a.melDensity;
+    const on = slots.filter(() => Math.random() < dens);
+    if (!on.includes(0) && Math.random() < .6) on.unshift(0);
+    while (on.length < 3) { const s = pick(slots); if (!on.includes(s)) on.push(s); }
+    on.sort((x, y) => x - y);
+    const lo = a.mood === 'dusky' ? 1 : 3, hi = a.mood === 'dusky' ? 7 : 9;
+    let idx = Math.round(rand(lo + 1, hi - 1));
+    const notes = {};
+    for (const s of on) { notes[s] = idx; idx = clamp(idx + pick([-2, -1, -1, 0, 1, 1, 2]), lo, hi); }
+    this.motif = notes; this.motifRange = [lo, hi];
+  }
+  penta(idx, oct = 12) { return this.a.base + oct + 12 * Math.floor(idx / 5) + PENTA[((idx % 5) + 5) % 5]; }
+
+  /* --- clock --- */
+  startClock() {
+    clearInterval(this._iv);
+    this.next = this.ctx.currentTime + .08; this.step = 0;
+    this._iv = setInterval(() => this.pump(), 25);
+  }
+  pump() {
+    if (this.state !== 'playing') return;
+    const ahead = this.ctx.currentTime + .14;
+    while (this.next < ahead) {
+      if (this.pending && this.step % 4 === 0) { this.adopt(this.pending, this.next, false); this.step = 0; }
+      const sp = 60 / this.bpm / 4;
+      const t = this.next + (this.step % 2 ? this.swing * sp : 0);
+      this.onStep(this.step, t, sp);
+      this.next += sp;
+      this.step = (this.step + 1) % 16;
+      if (this.step === 0) this.onBar(this.next);
+    }
+  }
+  onBar(t) {
+    this.bars++;
+    this.phraseBar = (this.phraseBar + 1) % 4;
+    this.fillBar = this.style === 'city' && this.bars % 4 === 3;
+    if (this.style === 'city' && this.bars % 4 === 0 && Math.random() < .55) this.rotateCity();
+    if (++this.barInChord >= this.chordBars) { this.barInChord = 0; this.chordIdx = (this.chordIdx + 1) % (this.chords ? this.chords.length : this.a.prog.length); this.setChord(t); }
+    if (this.bars % 8 === 0) {
+      this.sectionIdx = (this.sectionIdx + 1) % this.a.form.length;
+      this.section = this.a.form[this.sectionIdx];
+      this.enterSection(t);
+      if (Math.random() < .4) this.newMotif();
+      if (Math.random() < .35) this.newGroove();
+    }
+  }
+  onStep(s, t, sp) {
+    const a = this.a, G = this.groove, sec = this.section, beat = this.beatOn, cf = this.cfg, st = this.style;
+    const breakdown = sec === 'C';
+
+    // chords
+    const stabNow = this.mode === 'stab' ? (st === 'house' ? a.houseStabs[s] : a.stabs[s]) : this.mode === 'offbeat' ? s % 4 === 2 : false;
+    if (stabNow) this.stab(t, sp);
+    if (cf.pump && beat && !breakdown && s % 4 === 0) {
+      const p = this.padPump.gain, depth = st === 'house' ? .15 : a.pumpDepth;
+      p.setTargetAtTime(depth, t, .008); p.setTargetAtTime(1, t + .03, 60 / this.bpm * (st === 'house' ? .18 : .22));
+    }
+    if (cf.comp && this.compSteps.includes(s)) {     // Rhodes-style comping on the off-beats
+      const slow = this.feel === 'slow';
+      this.voices.forEach((v, i) => this.fm(v.midi + (slow ? 12 : 0), t + i * (slow ? .055 : .007), 'keys', (breakdown ? .3 : .42) * (slow ? .85 : 1), true));
+    }
+
+    if (beat) {
+      if (G.K[s] && !breakdown) this.kick(t, G.K[s]);
+      if (G.H[s] && Math.random() > (st === 'wave' ? .12 : .05)) this.hat(t, G.H[s] * rand(.75, 1) * (breakdown ? .7 : 1));
+      if (G.O[s] && !breakdown) this.openHat(t, G.O[s]);
+      if (G.B[s] && !breakdown) this.rim(t, G.B[s]);
+      if (G.C[s] && !breakdown) this.clap(t, G.C[s]);
+      if (G.S[s]) this.shaker(t, G.S[s] * rand(.6, 1));
+      if (Math.random() < (st === 'wave' ? .05 + .07 * a.energy : .03)) this.click(t, rand(.4, 1));
+      if (!breakdown) this.bassStep(s, t, sp);
+      if (this.fillBar && s >= 12 && !breakdown) {
+        if (this.feel === 'slow') { if (s === 15) this.rim(t, .22); }
+        else { this.hat(t, .3 * rand(.7, 1)); if (s === 14 || s === 15) this.rim(t, .26); }
+      }
+    }
+
+    // arpeggio (Wave, section B)
+    if (cf.arp && sec === 'B' && this.melodyOn && (a.arpRate === 16 || s % 2 === 0)) {
+      const n = this.chordTones.length, i = (a.arpRate === 16 ? s : s / 2) % a.arpPattern.length;
+      const m = this.chordTones[a.arpPattern[i] % n] + 24 + (a.arpPattern[i] >= n ? 12 : 0);
+      this.arp(m, t, sp * (a.arpRate === 16 ? .9 : 1.8));
+    }
+
+    // melody: FM voice, or the talking lead in House's B section
+    const leadNow = cf.lead && sec === 'B';
+    const restSection = cf.arp && sec === 'B';
+    if (this.melodyOn && !restSection) {
+      let idx = this.motif[s];
+      const restBar = !leadNow && this.phraseBar === 2;
+      if (idx != null && !restBar && Math.random() > .08) {
+        const [lo, hi] = this.motifRange;
+        if (this.phraseBar === 1 && Math.random() < .3) idx += pick([-1, 1]);
+        if (this.phraseBar === 3) idx += pick([1, 2, -1]);
+        idx = clamp(idx, lo, hi + 1);
+        let m = this.penta(idx);
+        if (s % 8 === 0 && !this.chordPcs.has(pcOf(m))) {
+          for (const d of [1, -1, 2, -2]) { const mm = this.penta(idx + d); if (this.chordPcs.has(pcOf(mm))) { m = mm; break; } }
+        }
+        if (leadNow) this.lead(m, t, sp * 1.7);
+        else this.fm(m, t, st === 'city' ? 'glass' : a.inst, s % 4 === 0 ? 1 : .75);
+        this.notify(t, () => this.onNote && this.onNote(m));
+      }
+      if (!leadNow && s % 2 === 1 && Math.random() < .03 + .03 * a.energy) this.fm(this.penta(Math.round(rand(5, 10)), 12), t, 'glass', .4);
+    }
+  }
+  bassStep(s, t, sp) {
+    const b = this.cfg.bass, root = this.chordRoot;
+    if (b === 'funk') {
+      const slow = this.feel === 'slow';
+      if (this.fillBar && !slow && s >= 12) {           // walk up into the next chord
+        const nx = pcOf(this.chordFor(this.chordIdx + 1)[0]);
+        const walk = { 12: [7, .7], 14: [12, .6], 15: [((nx - 1 - root) % 12 + 12) % 12, .6] }[s];
+        if (walk) this.bass(t, root, walk[0], sp * 1.1, walk[1], 'pluck');
+        return;
+      }
+      const hit = this.funk.find(h => h[0] === s);
+      if (hit) this.bass(t, root, hit[1], sp * (hit[3] || (hit[1] === 0 ? 1.7 : 1.1)), hit[2], slow ? 'soft' : 'pluck');
+    } else if (b === 'octave') {
+      if (s % 2 === 0) this.bass(t, root, s % 4 === 2 ? 12 : 0, sp * 1.4, s % 4 === 2 ? .85 : 1, 'acid');
+    } else if (this.a.bassStyle === 'pulse') {
+      if (s % 2 === 0) this.bass(t, root, s === 8 && Math.random() < .3 ? 7 : 0, sp * 1.6, .7 + (s % 4 === 0 ? .3 : 0), 'saw');
+    } else if (s === 0) this.bass(t, root, 0, sp * 6, 1, 'soft');
+    else if (s === 8 && Math.random() < .5) this.bass(t, root, Math.random() < .6 ? 0 : 7, sp * 4, 1, 'soft');
+  }
+  notify(t, fn) { setTimeout(fn, Math.max(0, (t - this.ctx.currentTime) * 1000)); }
+
+  /* --- instruments --- */
+  stab(t, sp) {
+    const house = this.style === 'house';
+    this.voices.forEach(v => { const e = v.env.gain; e.setTargetAtTime(house ? .7 : .62, t, .004); e.setTargetAtTime(house ? .03 : .1, t + .02, sp * (house ? .8 : 1.1)); });
+    if (this.cfg.stabFilter) { const f = this.padFilter.frequency, cut = this.cut; f.setTargetAtTime(cut * 2.1, t, .004); f.setTargetAtTime(cut, t + .015, sp * 1.3); }
+  }
+  arp(midi, t, dur) {
+    const c = this.ctx, o = c.createOscillator(), e = c.createGain();
+    o.type = 'square'; o.frequency.value = hz(midi);
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime(this.melLevel ?? 1, t + .004); e.gain.setTargetAtTime(.0001, t + .01, dur * .45);
+    o.connect(e); e.connect(this.arpBus); o.start(t); o.stop(t + dur * 3 + .1);
+  }
+  lead(midi, t, dur) {
+    const f = hz(midi), lv = .075 * this.a.level;
+    this.leadA.frequency.setTargetAtTime(f, t, .03); this.leadB.frequency.setTargetAtTime(f, t, .03);   // glide between notes
+    this.leadEnv.gain.setTargetAtTime(lv, t, .012); this.leadEnv.gain.setTargetAtTime(0, t + dur, .05);
+    const bp = this.leadBP.frequency;                                                                      // "oo" → "ah" vowel on each note
+    bp.setTargetAtTime(1900, t, .02); bp.setTargetAtTime(650, t + .04, dur * .5);
+  }
+  fm(midi, t, inst, vel, quiet = false) {
+    const c = this.ctx, f = hz(midi);
+    const P = { keys: [1, 1.4, 2.4, .5], glass: [2, .9, 3, 1], pluck: [3, 2, 1.5, .16] }[inst] || [1, 1.4, 2.4, .5];
+    const [ratio, index, dec, mdec] = P;
+    const car = c.createOscillator(); car.frequency.value = f;
+    const mod = c.createOscillator(); mod.frequency.value = f * ratio;
+    const mg = c.createGain(); mg.gain.setValueAtTime(index * f, t); mg.gain.exponentialRampToValueAtTime(index * f * .06 + .01, t + mdec);
+    mod.connect(mg); mg.connect(car.frequency);
+    const env = c.createGain(), pk = .085 * vel * this.a.level * (quiet ? .5 : (this.melLevel ?? 1)), d = quiet ? dec * .7 : dec;
+    env.gain.setValueAtTime(.0001, t); env.gain.linearRampToValueAtTime(pk, t + .006); env.gain.exponentialRampToValueAtTime(.0001, t + d);
+    const pn = this.panner(quiet ? 0 : rand(-.45, .45));
+    car.connect(env); env.connect(pn); pn.connect(this.melBus);
+    car.start(t); mod.start(t); car.stop(t + d + .05); mod.stop(t + d + .05);
+  }
+  noiseHit(t, type, f, q, peak, dec, pan = 0) {
+    const c = this.ctx, src = c.createBufferSource(); src.buffer = this.noiseBuf;
+    const fl = this.flt(type, f, q), e = c.createGain(), pn = this.panner(pan);
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime(peak, t + .002); e.gain.exponentialRampToValueAtTime(.0001, t + dec);
+    src.connect(fl); fl.connect(e); e.connect(pn); pn.connect(this.drumBus);
+    src.start(t, Math.random() * 2.5); src.stop(t + dec + .02);
+  }
+  kick(t, v) {
+    const c = this.ctx, o = c.createOscillator(), e = c.createGain(), house = this.style === 'house';
+    o.frequency.setValueAtTime(house ? 150 : 115, t); o.frequency.exponentialRampToValueAtTime(house ? 48 : 46, t + (house ? .09 : .12));
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime((house ? .62 : .55) * v, t + .003); e.gain.exponentialRampToValueAtTime(.0001, t + (house ? .32 : .38));
+    o.connect(e); e.connect(this.drumBus); o.start(t); o.stop(t + .4);
+    this.notify(t, () => this.onKick && this.onKick(v));
+  }
+  hat(t, v) { this.noiseHit(t, 'highpass', 7200, .7, .09 * v, rand(.03, .06), rand(-.3, .3)); }
+  openHat(t, v) { this.noiseHit(t, 'highpass', 6400, .8, .08 * v, rand(.16, .24), .15); }
+  shaker(t, v) { this.noiseHit(t, 'bandpass', 5600, 1.6, .07 * v, .07, rand(-.5, .5)); }
+  clap(t, v) {
+    [0, .008, .017].forEach((d, i) => this.noiseHit(t + d, 'bandpass', 1400, 1.4, .14 * v * (i === 2 ? 1 : .7), i === 2 ? .16 : .02, rand(-.1, .1)));
+  }
+  rim(t, v) {
+    const dusk = this.a.mood === 'dusky';
+    this.noiseHit(t, 'bandpass', dusk ? 1300 : 1900, 1.1, .16 * v, .11, .1);
+    const c = this.ctx, o = c.createOscillator(), e = c.createGain();
+    o.frequency.value = dusk ? 260 : 340;
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime(.09 * v, t + .002); e.gain.exponentialRampToValueAtTime(.0001, t + .07);
+    o.connect(e); e.connect(this.drumBus); o.start(t); o.stop(t + .09);
+  }
+  click(t, v) {
+    const c = this.ctx, o = c.createOscillator(), e = c.createGain(), pn = this.panner(rand(-.8, .8));
+    o.frequency.value = pick([1600, 2400, 3200]);
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime(.05 * v, t + .001); e.gain.exponentialRampToValueAtTime(.0001, t + .025);
+    o.connect(e); e.connect(pn); pn.connect(this.drumBus); o.start(t); o.stop(t + .04);
+  }
+  bass(t, pc, semis, dur, v, kind) {
+    const m = 40 + ((pc - 4 + 12) % 12) + semis;          // E2..D#3, plus octave/fifth jumps
+    const c = this.ctx, e = c.createGain();
+    const o = c.createOscillator(); o.type = kind === 'soft' ? 'sine' : 'sawtooth'; o.frequency.value = hz(m);
+    const o2 = c.createOscillator(); o2.type = kind === 'pluck' ? 'sine' : 'triangle'; o2.frequency.value = hz(m) * (kind === 'soft' ? 2 : 1);
+    const g2 = this.g(kind === 'pluck' ? .9 : .2);
+    const pk = { soft: .5, saw: .32, pluck: .42, acid: .36 }[kind] * v;
+    const hold = kind === 'pluck' ? .07 : kind === 'acid' ? .09 : .12;
+    e.gain.setValueAtTime(.0001, t); e.gain.linearRampToValueAtTime(pk, t + (kind === 'pluck' ? .006 : .012));
+    e.gain.setTargetAtTime(pk * (kind === 'pluck' ? .4 : .65), t + .02, hold); e.gain.setTargetAtTime(.0001, t + dur, .05);
+    if (kind === 'acid' || kind === 'pluck') {           // a quick filter blip gives the bass its funk
+      const f = this.bassLP.frequency, base = this.cfg.bassCut;
+      f.setTargetAtTime(base * (kind === 'acid' ? 2.6 : 1.8), t, .004); f.setTargetAtTime(base, t + .01, kind === 'acid' ? .07 : .05);
+    }
+    o.connect(e); o2.connect(g2); g2.connect(e); e.connect(this.bassBus);
+    o.start(t); o2.start(t); o.stop(t + dur + .5); o2.stop(t + dur + .5);
+  }
+  tick(level, edge) {
+    if (!this.ctx && !this.init()) return;
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    // a soft, rounded "thock": a pitch-dropping low body, a short woody mid knock so it carries on
+    // phone speakers, and a muffled felt-like thud. No bright click on top.
+    const c = this.ctx, t = c.currentTime + .004;
+    const out = this.flt('lowpass', edge ? 700 : 1100, .5); out.connect(this.tickOut);
+    // body
+    const body = c.createOscillator(), be = c.createGain();
+    const f0 = edge ? 120 : 150 + level * 5, f1 = edge ? 58 : 82 + level * 3, bodyDec = edge ? .16 : .085;
+    body.frequency.setValueAtTime(f0, t); body.frequency.exponentialRampToValueAtTime(f1, t + bodyDec * .7);
+    be.gain.setValueAtTime(.0001, t); be.gain.linearRampToValueAtTime(edge ? .55 : .42, t + .003); be.gain.exponentialRampToValueAtTime(.0001, t + bodyDec);
+    body.connect(be); be.connect(out); body.start(t); body.stop(t + bodyDec + .02);
+    // woody knock (keycap-like resonance)
+    const knock = c.createOscillator(), ke = c.createGain();
+    knock.type = 'triangle'; knock.frequency.setValueAtTime(edge ? 240 : 310 + level * 6, t); knock.frequency.exponentialRampToValueAtTime(edge ? 190 : 250, t + .03);
+    ke.gain.setValueAtTime(.0001, t); ke.gain.linearRampToValueAtTime(edge ? .14 : .12, t + .002); ke.gain.exponentialRampToValueAtTime(.0001, t + (edge ? .06 : .035));
+    knock.connect(ke); ke.connect(out); knock.start(t); knock.stop(t + .08);
+    // muffled thud
+    const src = c.createBufferSource(); src.buffer = this.noiseBuf;
+    const lp = this.flt('lowpass', edge ? 380 : 520, .8), ne = c.createGain();
+    ne.gain.setValueAtTime(.0001, t); ne.gain.linearRampToValueAtTime(edge ? .3 : .22, t + .002); ne.gain.exponentialRampToValueAtTime(.0001, t + (edge ? .05 : .028));
+    src.connect(lp); lp.connect(ne); ne.connect(out); src.start(t, Math.random()); src.stop(t + .07);
+    if (edge) {   // a second, softer bump: the knob hitting its stop
+      const o2 = c.createOscillator(), e2 = c.createGain(), t2 = t + .055;
+      o2.frequency.setValueAtTime(95, t2); o2.frequency.exponentialRampToValueAtTime(55, t2 + .1);
+      e2.gain.setValueAtTime(.0001, t2); e2.gain.linearRampToValueAtTime(.3, t2 + .003); e2.gain.exponentialRampToValueAtTime(.0001, t2 + .12);
+      o2.connect(e2); e2.connect(out); o2.start(t2); o2.stop(t2 + .14);
+    }
+  }
+
+  level() { return this.muted ? 0 : this.vol * .85; }
+  async play() {
+    if (!this.ctx && !this.init()) return false;
+    try { await this.ctx.resume(); } catch (e) {}
+    const now = this.ctx.currentTime;
+    if (this.state === 'off') { this.apply(this.comp, true); this.adopt(this.pending, now, true); }
+    else if (this.pending) this.adopt(this.pending, now, false);
+    this.state = 'playing';
+    this.setBeat(this.beatOn);
+    this.master.gain.cancelScheduledValues(now);
+    this.master.gain.setTargetAtTime(this.level(), now, 1.2);
+    this.startClock();
+    return true;
+  }
+  pause() {
+    if (!this.ctx || this.state !== 'playing') return;
+    this.state = 'paused';
+    clearInterval(this._iv);
+    this.master.gain.setTargetAtTime(0, this.ctx.currentTime, .25);
+  }
+  setBeat(on) {
+    this.beatOn = on;
+    if (!this.ctx) return;
+    const now = this.ctx.currentTime;
+    this.drumBus.gain.setTargetAtTime(on ? .6 : 0, now, .4);
+    this.bassBus.gain.setTargetAtTime(on ? this.cfg.bassLevel : 0, now, .6);
+  }
+  setVolume(v) { this.vol = v; if (this.ctx && this.state === 'playing') this.master.gain.setTargetAtTime(this.level(), this.ctx.currentTime, .08); }
+  setMuted(m) { this.muted = m; if (this.ctx && this.state === 'playing') this.master.gain.setTargetAtTime(this.level(), this.ctx.currentTime, .3); }
+}
+
+/* ================= Sound engine: one audio context, two engines =================
+   Hum is the original engine; Wave, City and House are styles of the synth engine.
+   Switching between engines crossfades; switching styles carries the chords over. */
+class SoundEngine {
+  constructor() {
+    this.hum = new AmbientHum(); this.synth = new AmbientSynth();
+    this.mode = 'wave'; this.ctx = null; this.state = 'off';
+    this._p = { vol: .6, muted: false, beatOn: true, melodyOn: true, melLevel: 1, comp: null, onNote: null, onKick: null };
+  }
+  engineFor(m) { return m === 'hum' ? this.hum : this.synth; }
+  get cur() { return this.engineFor(this.mode); }
+  ready(e) {
+    if (!this.ctx) { const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return false; this.ctx = new AC(); }
+    if (!e.ctx) { e.init(this.ctx); Object.assign(e, this._p); if (e === this.synth && this.mode !== 'hum') e.style = this.mode; }
+    return true;
+  }
+  init() { return this.ready(this.cur); }
+  apply(comp) { this._p.comp = comp; [this.hum, this.synth].forEach(e => { e.comp = comp; if (e.ctx) e.apply(comp); }); }
+  async play() {
+    const e = this.cur;
+    if (!this.ready(e)) return false;
+    try { await this.ctx.resume(); } catch (_) {}
+    await e.play(); this.state = 'playing';
+    return true;
+  }
+  pause() { this.cur.pause(); this.state = 'paused'; }
+  async setMode(m) {
+    if (m === this.mode) return;
+    const prev = this.cur; this.mode = m; const next = this.cur;
+    if (next === this.synth) { if (this.synth.ctx) this.synth.setStyle(m); else this.synth.style = m; }
+    if (this.state === 'playing' && prev !== next) { prev.pause(); if (this.ready(next)) await next.play(); }
+  }
+  setBeat(on) { this._p.beatOn = on; [this.hum, this.synth].forEach(e => e.ctx ? e.setBeat(on) : (e.beatOn = on)); }
+  setVolume(v) { this._p.vol = v; [this.hum, this.synth].forEach(e => e.ctx ? e.setVolume(v) : (e.vol = v)); }
+  setMuted(m) { this._p.muted = m; [this.hum, this.synth].forEach(e => e.ctx ? e.setMuted(m) : (e.muted = m)); }
+  tick(level, edge) { if (this.ready(this.synth)) this.synth.tick(level, edge); }
+  bpmFor(a) { return this.mode === 'city' ? a.bpmCity : this.mode === 'house' ? a.bpmHouse : a.bpm; }
+}
+['vol', 'muted', 'beatOn', 'melodyOn', 'melLevel', 'comp', 'onNote', 'onKick'].forEach(k => Object.defineProperty(SoundEngine.prototype, k, {
+  get() { return this._p[k]; },
+  set(v) { this._p[k] = v; this.hum[k] = v; this.synth[k] = v; }
+}));
 
 /* ================= Visual engine (WebGL) ================= */
 const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}`;
@@ -980,7 +1622,7 @@ function initCur(c) {
 const ease3 = (a, b, k) => { a[0] = lerp(a[0], b[0], k); a[1] = lerp(a[1], b[1], k); a[2] = lerp(a[2], b[2], k); };
 
 /* ================= UI ================= */
-const engine = new Ambient();
+const engine = new SoundEngine();
 let toneSel = store.get('tone', 'any');
 if (!TONE_KEYS.includes(toneSel)) toneSel = 'any';
 let speed = store.get('speed', 1);
@@ -1016,6 +1658,10 @@ function copyHex(hex) {
 let toastT;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 1800); }
 
+function captionB(c) {
+  const style = MODES_UI.find(x => x[0] === engine.mode)[1];
+  $('#capB').textContent = `${c.audio.keyLabel} · ${style} · ${engine.bpmFor(c.audio)} BPM`;
+}
 function showComposition(c) {
   const root = document.documentElement.style;
   const shown = c.palette;
@@ -1030,7 +1676,7 @@ function showComposition(c) {
   cap.classList.add('fade');
   setTimeout(() => {
     $('#capA').textContent = `No. ${String(c.no).padStart(4, '0')} — ${c.harmony}`;
-    $('#capB').textContent = `${c.audio.keyLabel} · ${MOOD_LABEL[c.audio.mood]} · ${c.audio.bpm} BPM`;
+    captionB(c);
     cap.classList.remove('fade');
   }, 900);
   $('#announce').textContent = `${TONES[c.tone].label}, ${c.harmony.toLowerCase()}, in ${c.audio.keyLabel.replace('♭', ' flat').replace('♯', ' sharp')}`;
@@ -1069,8 +1715,8 @@ async function toggleSound() {
   syncPlay();
 }
 playBtn.addEventListener('click', toggleSound);
-const muteBtn = $('#mute'), muteSw = $('#muteSw');
-function setMute(m) { engine.setMuted(m); muteBtn.setAttribute('aria-pressed', String(m)); muteSw.checked = m; }
+const muteSw = $('#muteSw');
+function setMute(m) { engine.setMuted(m); muteSw.checked = m; }
 
 /* ---- volume dial: 11 detents, spring-snapped, with a click and a vibration on every step ---- */
 const dial = $('#dial'), dialWrap = $('#dialWrap'), knob = $('#knob'), dialVal = $('#dialVal'), dialTicks = $('#dialTicks');
@@ -1118,17 +1764,14 @@ dial.addEventListener('pointerdown', e => {
   e.preventDefault(); dial.focus({ preventScroll: true });
   try { dial.setPointerCapture(e.pointerId); } catch (_) {}
   const r = dial.getBoundingClientRect();
-  drag = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, y: e.clientY, acc: level * STEP_DEG };
+  drag = { cx: r.left + r.width / 2, cy: r.top + r.height / 2, x: e.clientX, y: e.clientY, acc: level * STEP_DEG };
   drag.a = angleAt(e, drag);
   engage(true); edgeArmed = true;
 });
 dial.addEventListener('pointermove', e => {
   if (!drag) return;
-  const dist = Math.hypot(e.clientX - drag.cx, e.clientY - drag.cy);
-  const a = angleAt(e, drag);
-  let d = a - drag.a; d = ((d + 540) % 360) - 180; drag.a = a;
-  const dy = drag.y - e.clientY; drag.y = e.clientY;
-  drag.acc += dist > 22 ? d : dy * 1.4;          // circle around it, or drag up and down near the centre
+  const dy = drag.y - e.clientY, dx = e.clientX - drag.x; drag.y = e.clientY; drag.x = e.clientX;
+  drag.acc += (dy + dx) * 1.3;                    // drag up or right to turn it up, down or left to turn it down
   drag.acc = clamp(drag.acc, -40, ARC + 40);
   if (drag.acc < -14 || drag.acc > ARC + 14) bumpEdge(); else if (drag.acc > 4 && drag.acc < ARC - 4) edgeArmed = true;
   const n = Math.round(clamp(drag.acc, 0, ARC) / STEP_DEG);
@@ -1165,7 +1808,59 @@ function stepKnob(dt) {
 }
 
 const knobFeedback = on => { engine.tick(on ? 8 : 2, false); haptic(false); };
-muteBtn.addEventListener('click', () => { setMute(!engine.muted); knobFeedback(engine.muted); });
+const modeKnob = $('#modeKnob'), modeLbl = $('#modeLbl');
+const MODE_KEYS = MODES_UI.map(m => m[0]), MODE_ANG = { hum: -45, wave: 0, city: 45 };
+function setMode(m, feedback = true) {
+  if (!MODE_KEYS.includes(m)) m = 'wave';
+  engine.setMode(m); store.set('mode', m);
+  const label = MODES_UI.find(x => x[0] === m)[1];
+  modeKnob.style.setProperty('--a', MODE_ANG[m] + 'deg');
+  modeLbl.textContent = label;
+  modeKnob.setAttribute('aria-valuenow', String(MODE_KEYS.indexOf(m))); modeKnob.setAttribute('aria-valuetext', label);
+  if (target) captionB(target);
+  if (feedback) { engine.tick(3 + MODE_KEYS.indexOf(m) * 3, false); haptic(false); }
+}
+const stepMode = d => setMode(MODE_KEYS[(MODE_KEYS.indexOf(engine.mode) + d + MODE_KEYS.length) % MODE_KEYS.length]);
+// style dial: turn it like the volume dial (drag up/right or down/left, scroll, arrow keys); a tap steps to the next style
+(() => {
+  const STEP = 45, MAX = (MODE_KEYS.length - 1) * STEP;
+  let d = null, armed = true, wheel = 0, linger;
+  const idx = () => MODE_KEYS.indexOf(engine.mode);
+  const go = i => { i = clamp(i, 0, MODE_KEYS.length - 1); if (i === idx()) return false; setMode(MODE_KEYS[i]); return true; };
+  const engage = on => { clearTimeout(linger); if (on) modeKnob.classList.add('engaged'); else linger = setTimeout(() => { if (!d) modeKnob.classList.remove('engaged'); }, 1200); };
+  const bump = () => { if (!armed) return; armed = false; engine.tick(idx() * 3, true); haptic(true); };
+  modeKnob.addEventListener('pointerdown', e => {
+    e.preventDefault(); modeKnob.focus({ preventScroll: true });
+    try { modeKnob.setPointerCapture(e.pointerId); } catch (_) {}
+    const r = modeKnob.querySelector('.cap').getBoundingClientRect();
+    d = { x0: e.clientX, y0: e.clientY, x: e.clientX, y: e.clientY, acc: idx() * STEP, moved: false };
+    engage(true); armed = true;
+  });
+  modeKnob.addEventListener('pointermove', e => {
+    if (!d) return;
+    if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) > 4) d.moved = true;
+    const dy = d.y - e.clientY, dx = e.clientX - d.x; d.y = e.clientY; d.x = e.clientX;
+    d.acc = clamp(d.acc + (dy + dx) * 1.2, -30, MAX + 30);
+    if (d.acc < -12 || d.acc > MAX + 12) bump(); else if (d.acc > 4 && d.acc < MAX - 4) armed = true;
+    go(Math.round(clamp(d.acc, 0, MAX) / STEP));
+  });
+  const end = () => { if (!d) return; const tap = !d.moved; d = null; if (tap) stepMode(1); engage(false); };
+  modeKnob.addEventListener('pointerup', end); modeKnob.addEventListener('pointercancel', () => { d = null; engage(false); });
+  modeKnob.addEventListener('mouseenter', () => engage(true));
+  modeKnob.addEventListener('mouseleave', () => engage(false));
+  modeKnob.addEventListener('focus', () => engage(true));
+  modeKnob.addEventListener('blur', () => engage(false));
+  modeKnob.addEventListener('wheel', e => {
+    e.preventDefault(); engage(true); engage(false); wheel += e.deltaY;
+    if (Math.abs(wheel) >= 60) { const dir = wheel > 0 ? -1 : 1; wheel = 0; if (!go(idx() + dir)) { armed = true; bump(); } }
+  }, { passive: false });
+  modeKnob.addEventListener('keydown', e => {
+    const m = { ArrowUp: 1, ArrowRight: 1, ArrowDown: -1, ArrowLeft: -1 }[e.key];
+    if (m) { e.preventDefault(); e.stopPropagation(); engage(true); engage(false); if (!go(idx() + m)) { armed = true; bump(); } }
+    else if (e.key === 'Home' || e.key === 'End') { e.preventDefault(); e.stopPropagation(); go(e.key === 'Home' ? 0 : MODE_KEYS.length - 1); }
+  });
+})();
+setMode(store.get('mode', 'wave'), false);
 muteSw.addEventListener('change', () => setMute(muteSw.checked));
 const beatSw = $('#beatSw'), melSw = $('#melSw');
 const beatKnob = $('#beatKnob'), melKnob = $('#melKnob');
@@ -1226,11 +1921,15 @@ addEventListener('keydown', e => {
   if (e.key === 'Escape') { setPanel(false); return; }
   if (document.body.classList.contains('pre')) return;
   if (typing) return;
-  if ((e.code === 'Space' || e.key === 'r' || e.key === 'R') && !(t.matches && t.matches('button'))) { e.preventDefault(); randomise(); }
+  // Space randomises everywhere except on text buttons (tones, Explore), where it keeps its usual meaning;
+  // on the knobs and play button it would otherwise re-trigger the control you just clicked
+  const onKnob = t.closest && t.closest('.knob-sw, .play, .dial, .shuffle');
+  if ((e.code === 'Space' || e.key === 'r' || e.key === 'R') && (onKnob || !(t.matches && t.matches('button')))) { e.preventDefault(); randomise(); }
   else if (/^[0-6]$/.test(e.key)) setTone(TONE_KEYS[+e.key]);
   else if (e.key === 's' || e.key === 'S') toggleSound();
   else if (e.key === 'm' || e.key === 'M') setMute(!engine.muted);
   else if (e.key === 'b' || e.key === 'B') setBeat(!engine.beatOn);
+  else if (e.key === 'v' || e.key === 'V') stepMode(1);
 });
 
 /* ================= Frame loop ================= */
